@@ -1,16 +1,79 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
-</div>
+# Scribra – AI Blog Platform
 
-# Run and deploy your AI Studio app
+Scribra is a modern, AI-assisted blogging platform built to provide a clean writing experience combined with social interaction features. It enables users to write, publish, discover, and engage with blog content in a content-first environment.
 
-This contains everything you need to run your app locally.
+This project focuses on usability, clarity, and realistic platform behavior similar to production-grade publishing systems.
 
-View your app in AI Studio: https://ai.studio/apps/drive/1s7TpeflbFo7plhnDqcCCFuU9ccCtjvL0
+## Project Overview
 
-## Run Locally
+- Scribra allows users to:
 
-**Prerequisites:**  Node.js
+- Create and publish blog posts
+
+- Generate content with AI assistance
+
+- Browse a public blog feed
+
+- Like posts
+
+- Comment on posts
+
+- Save posts to a personal Reading List
+
+- Manage profile and avatar
+
+- The platform is designed to feel like a real-world blogging application rather than a demo project.
+
+## Key Features
+### Public Home Feed
+
+- Public blog feed
+
+- AI-assisted editor
+
+- Like and comment system
+
+- Bookmark and Reading List
+
+- Authentication and protected routes
+
+- Light and dark mode support
+
+## Tech Stack
+
+### Frontend
+
+- Next.js
+
+- React
+
+- Tailwind CSS
+
+### Backend
+
+- Node.js
+
+- Express.js / API Routes
+
+### Database
+
+- PostgreSQL
+
+### AI Integration
+
+- External AI API
+
+## Project Structure
+```
+scribra-ai-blog-platform/
+ │
+ ├── app/                # Core application routes
+ ├── components/         # Reusable UI components
+ ├── lib/                # Utility functions
+ ├── database/           # Database configuration
+ ├── public/             # Static assets
+ └── styles/             # Global styling
+```
 
 
 1. Install dependencies:
