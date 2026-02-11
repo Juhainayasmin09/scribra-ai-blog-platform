@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Scribra - AI-Powered Blog Platform</title>
+    <script src="https://cdn.tailwindcss.com?plugins=typography"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='2' y1='22' x2='22' y2='2' gradientUnits='userSpaceOnUse'%3E%3Cstop offset='0' stop-color='%232dd4bf'/%3E%3Cstop offset='1' stop-color='%2360a5fa'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cpath d='M19.8 4.2C19.8 4.2 18.5 10 13.5 15C8.5 20 3.5 21.5 2 22C2 22 4.5 20 7.5 17C10.5 14 17 6.5 19 5C19.5 4.6 19.8 4.2 19.8 4.2Z' fill='url(%23g)'/%3E%3Cpath d='M2 22L1 23' stroke='url(%23g)' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E">
+    <style>
+      :root {
+        /* Semantic Tokens - Light Mode (Default) */
+        --bg-page:            #F8FAFC;
+        --bg-card:            #FFFFFF;
+        --bg-muted:           #F1F5F9;
+        
+        --border-light:       #E2E8F0;
+        
+        --text-primary:       #0F172A; /* User-Typed Content (Light) */
+        --text-secondary:     #475569;
+        --text-muted:         #64748B;
+        
+        --icon-bg:            #EEF2FF;
+        --icon-color:         #6366F1;
+        
+        --shadow-card:        0 8px 24px rgba(15, 23, 42, 0.06);
+
+        /* Badge Tokens - Published (Light Mode) */
+        --badge-published-bg:     #E6F4EA;
+        --badge-published-text:   #1E4620; /* Dark Green for contrast */
+        --badge-published-border: #B7E0C2;
+
+        /* Component Aliases for Compatibility */
+        --bg-app: var(--bg-page);
+        --bg-surface: var(--bg-card);
+        --bg-header: var(--bg-card);
+        --bg-sidebar: var(--bg-card);
+        
+        --border-color: var(--border-light);
+        
+        --input-bg: var(--bg-card);
+        --input-placeholder: var(--text-muted);
+        
+        --editor-bg: var(--bg-page);
+        --editor-placeholder: #94A3B8; /* Editor Placeholder (Light) */
+        --preview-bg: var(--bg-card);
+        
+        --accent-primary: var(--icon-color);
+        --accent-hover: #4338ca;
+      }
+
+      [data-theme='dark'] {
+        /* Semantic Tokens - Dark Mode */
+        --bg-page:            #020617;
+        --bg-card:            #020617; /* Relies on border for separation */
+        --bg-muted:           #0f172a; 
+        
+        --border-light:       #1E293B;
+        
+        --text-primary:       #E5E7EB; /* User-Typed Content (Dark) */
+        --text-secondary:     #CBD5E1;
+        --text-muted:         #94A3B8;
+        
+        --icon-bg:            #1E293B;
+        --icon-color:         #A5B4FC;
+        
+        --shadow-card:        none;
+
+        /* Badge Tokens - Published (Dark Mode) */
+        --badge-published-bg:     rgba(34, 197, 94, 0.25);
+        --badge-published-text:   #BBF7D0;
+        --badge-published-border: transparent;
+
+        /* Component Aliases */
+        --bg-app: var(--bg-page);
+        --bg-surface: var(--bg-card);
+        --bg-header: var(--bg-card);
+        --bg-sidebar: var(--bg-card);
+        
+        --border-color: var(--border-light);
+        
+        --input-bg: #0f172a; /* Slightly lighter than card for inputs */
+        --input-placeholder: var(--text-muted);
+        
+        --editor-bg: var(--bg-page);
+        --editor-placeholder: #64748B; /* Editor Placeholder (Dark) */
+        --preview-bg: var(--bg-card);
+        
+        --accent-primary: var(--icon-color);
+        --accent-hover: #6366f1;
+      }
+
+      body {
+        font-family: 'Inter', sans-serif;
+        background-color: var(--bg-page);
+        color: var(--text-primary);
+        transition: background-color 0.2s ease, color 0.2s ease;
+      }
+
+      /* Component Transitions */
+      div, header, nav, aside, button, input, textarea {
+        transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+      }
+
+      /* Scrollbar */
+      ::-webkit-scrollbar {
+        width: 6px;
+      }
+      ::-webkit-scrollbar-track {
+        background: transparent;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: var(--border-light);
+        border-radius: 3px;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: var(--text-muted);
+      }
+
+      /* Editor Specifics */
+      .ProseMirror {
+        outline: none;
+        min-height: 300px;
+      }
+      .ProseMirror p.is-editor-empty:first-child::before {
+        content: attr(data-placeholder);
+        float: left;
+        color: var(--editor-placeholder);
+        pointer-events: none;
+        height: 0;
+      }
+    </style>
+  <script type="importmap">
+{
+  "imports": {
+    "react-router-dom": "https://esm.sh/react-router-dom@^7.13.0",
+    "lucide-react": "https://esm.sh/lucide-react@^0.563.0",
+    "react/": "https://esm.sh/react@^19.2.4/",
+    "react": "https://esm.sh/react@^19.2.4",
+    "@google/genai": "https://esm.sh/@google/genai@^1.40.0",
+    "react-dom/": "https://esm.sh/react-dom@^19.2.4/",
+    "marked": "https://esm.sh/marked@11.1.1",
+    "turndown": "https://esm.sh/turndown@7.1.3",
+    "@tiptap/react": "https://esm.sh/@tiptap/react@2.2.4?deps=react@19.2.4,react-dom@19.2.4",
+    "@tiptap/starter-kit": "https://esm.sh/@tiptap/starter-kit@2.2.4",
+    "@tiptap/extension-placeholder": "https://esm.sh/@tiptap/extension-placeholder@2.2.4"
+  }
+}
+</script>
+</head>
+  <body>
+    <div id="root"></div>
+  </body>
+</html>
