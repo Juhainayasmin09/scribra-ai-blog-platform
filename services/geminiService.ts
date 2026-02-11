@@ -1,11 +1,6 @@
 import { GoogleGenAI, Type } from "@google/genai";
 import { AIActionType } from "../types";
 
-// NOTE: In a real environment, this key should be secure.
-// The API key must be obtained exclusively from process.env.API_KEY.
-// We initialize the client with the key directly as per guidelines.
-const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
-
 const MODEL_NAME = "gemini-3-flash-preview";
 
 export const geminiService = {
@@ -14,9 +9,11 @@ export const geminiService = {
     context: string,
     additionalPrompt?: string
   ): Promise<string> => {
+    // Fix: Initialize GoogleGenAI instance right before the API call to ensure it always uses the most up-to-date API key from the environment.
     if (!process.env.API_KEY) {
       throw new Error("API Key is missing. Please set process.env.API_KEY.");
     }
+    const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
 
     let prompt = "";
 
@@ -67,11 +64,13 @@ export const geminiService = {
                             type: Type.ARRAY, 
                             items: { type: Type.STRING } 
                         }
-                    }
+                    },
+                    propertyOrdering: ["titleSuggestion", "keywords", "improvementTips"]
                 } : undefined,
             }
         });
         
+        // Fix: Access the text property directly instead of calling it as a method.
         return response.text || "";
     } catch (error) {
         console.error("Gemini API Error:", error);
