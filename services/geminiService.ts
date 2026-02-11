@@ -1,11 +1,10 @@
-import { GoogleGenAI } from "@google/genai";
+import { GoogleGenAI, Type } from "@google/genai";
 import { AIActionType } from "../types";
 
 // NOTE: In a real environment, this key should be secure.
-// We assume process.env.API_KEY is available as per instructions.
-const apiKey = process.env.API_KEY || '';
-
-const ai = new GoogleGenAI({ apiKey });
+// The API key must be obtained exclusively from process.env.API_KEY.
+// We initialize the client with the key directly as per guidelines.
+const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
 
 const MODEL_NAME = "gemini-3-flash-preview";
 
@@ -15,7 +14,7 @@ export const geminiService = {
     context: string,
     additionalPrompt?: string
   ): Promise<string> => {
-    if (!apiKey) {
+    if (!process.env.API_KEY) {
       throw new Error("API Key is missing. Please set process.env.API_KEY.");
     }
 
@@ -38,10 +37,8 @@ export const geminiService = {
         prompt = `Summarize the following blog post content into a short, engaging meta description (max 160 characters):\n\n${context}`;
         break;
       case 'SEO':
-        prompt = `Analyze the following blog content and provide SEO suggestions. 
-        Return ONLY a JSON object with this structure: 
-        { "titleSuggestion": "string", "keywords": ["string", "string"], "improvementTips": ["string"] }. 
-        Content:\n\n${context}`;
+        // Schema handles the structure, so we just ask for the analysis.
+        prompt = `Analyze the following blog content and provide SEO suggestions. Content:\n\n${context}`;
         break;
       default:
         prompt = context;
@@ -56,8 +53,22 @@ export const geminiService = {
             model: MODEL_NAME,
             contents: prompt,
             config: {
-                // If it's SEO, we want JSON output, otherwise plain text (undefined)
+                // For SEO, we enforce JSON via schema
                 responseMimeType: action === 'SEO' ? "application/json" : undefined,
+                responseSchema: action === 'SEO' ? {
+                    type: Type.OBJECT,
+                    properties: {
+                        titleSuggestion: { type: Type.STRING },
+                        keywords: { 
+                            type: Type.ARRAY, 
+                            items: { type: Type.STRING } 
+                        },
+                        improvementTips: { 
+                            type: Type.ARRAY, 
+                            items: { type: Type.STRING } 
+                        }
+                    }
+                } : undefined,
             }
         });
         
